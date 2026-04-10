@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vyavsay — Design Preview v3</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet" />
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: { 50: '#FEFCF8', 100: '#FAF6EE', 200: '#F3EDE0' },
+            ink: { 50: '#8C8477', 100: '#6B6459', 200: '#4A453C', 300: '#2D2A26', 400: '#1A1816' },
+            pastel: {
+              lavender: '#E8E4F7',
+              sage: '#DDE8DC',
+              peach: '#F7E4DB',
+              sky: '#DBE8F0',
+              honey: '#F0EAD2',
+              rose: '#F2DDE4',
+              mint: '#D4EDE6',
+              lilac: '#DDD6F3',
+            },
+            soft: {
+              lavender: '#7B6FA0',
+              sage: '#6B8A68',
+              peach: '#B87A60',
+              sky: '#5E85A0',
+              honey: '#A09060',
+              rose: '#A06878',
+              mint: '#5A9485',
+            },
+          },
+          fontFamily: {
+            display: ['Satoshi', 'Instrument Sans', 'sans-serif'],
+            body: ['Instrument Sans', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    * { font-family: 'Instrument Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+    .font-display { font-family: 'Satoshi', 'Instrument Sans', sans-serif; }
+
+    /* Subtle grain texture */
+    .grain::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 9999;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      border-radius: 48px;
+      border: 5px solid #2D2A26;
+      overflow: hidden;
+      position: relative;
+      background: #FEFCF8;
+      box-shadow: 0 40px 100px rgba(45,42,38,0.12), 0 0 0 1px rgba(45,42,38,0.04);
+    }
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 28px;
+      background: #2D2A26;
+      border-radius: 0 0 16px 16px;
+      z-index: 50;
+    }
+    .phone-content {
+      height: 100%;
+      overflow-y: auto;
+      padding-top: 36px;
+      scroll-behavior: smooth;
+    }
+    .phone-content::-webkit-scrollbar { width: 0; }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .screen-tab {
+      padding: 10px 22px;
+      border-radius: 100px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      color: #6B6459;
+      background: #FAF6EE;
+      letter-spacing: -0.01em;
+    }
+    .screen-tab:hover { background: #F3EDE0; }
+    .screen-tab.active {
+      background: #2D2A26;
+      color: #FEFCF8;
+    }
+
+    .card-press { transition: transform 0.15s ease; }
+    .card-press:active { transform: scale(0.98); }
+
+    /* Floating nav pill */
+    .nav-pill {
+      background: rgba(45,42,38,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+  </style>
+</head>
+<body class="bg-cream-100 min-h-screen grain">
+
+  <!-- Header -->
+  <div class="bg-cream-50 border-b border-cream-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-ink-300 flex items-center justify-center">
+          <span class="text-cream-50 font-display font-bold text-sm">V</span>
+        </div>
+        <div>
+          <h1 class="font-display text-xl font-bold text-ink-400">Vyavsay</h1>
+          <p class="text-[11px] text-ink-50 font-medium tracking-wide">Pastel Minimal &mdash; v3</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="max-w-7xl mx-auto px-6 py-5">
+    <div class="flex flex-wrap gap-2">
+      <button class="screen-tab active" onclick="showScreen('login')">Login</button>
+      <button class="screen-tab" onclick="showScreen('dashboard')">Dashboard</button>
+      <button class="screen-tab" onclick="showScreen('conversations')">Conversations</button>
+      <button class="screen-tab" onclick="showScreen('leads')">Leads</button>
+      <button class="screen-tab" onclick="showScreen('ai-brain')">AI Brain</button>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="max-w-7xl mx-auto px-6 pb-20 flex flex-col lg:flex-row gap-10 items-start">
+    <div class="flex-shrink-0 mx-auto lg:mx-0">
+      <div class="phone-frame">
+
+        <!-- ===== LOGIN ===== -->
+        <div class="phone-content screen active" id="screen-login">
+          <div class="h-full flex flex-col bg-cream-50">
+            <div class="flex-1 flex flex-col justify-center px-7">
+              <!-- Minimal logo mark -->
+              <div class="mb-10">
+                <div class="w-14 h-14 rounded-full bg-pastel-lavender flex items-center justify-center mb-6">
+                  <span class="font-display text-2xl font-bold text-soft-lavender">V</span>
+                </div>
+                <h1 class="font-display text-[28px] font-semibold text-ink-400 leading-tight">Welcome<br/>back.</h1>
+                <p class="text-ink-50 text-[15px] mt-2">Your business is waiting for you.</p>
+              </div>
+
+              <!-- Inputs — no borders, colored backgrounds -->
+              <div class="space-y-3">
+                <div>
+                  <input type="email" placeholder="Email address" class="w-full h-[54px] px-5 text-[15px] text-ink-300 bg-pastel-honey/60 rounded-2xl focus:outline-none focus:ring-2 focus:ring-ink-200/30 placeholder:text-ink-50/80 transition-all" />
+                </div>
+                <div>
+                  <input type="password" placeholder="Password" class="w-full h-[54px] px-5 text-[15px] text-ink-300 bg-pastel-lavender/50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-ink-200/30 placeholder:text-ink-50/80 transition-all" />
+                </div>
+              </div>
+
+              <button class="w-full h-[54px] bg-ink-300 text-cream-50 font-semibold rounded-2xl text-[15px] mt-5 active:scale-[0.97] transition-transform">
+                Sign in
+              </button>
+
+              <div class="flex items-center justify-between mt-4">
+                <a href="#" class="text-sm text-ink-50 hover:text-ink-200">Forgot password?</a>
+                <a href="#" class="text-sm font-semibold text-ink-300 hover:text-ink-400">Create account</a>
+              </div>
+            </div>
+
+            <!-- Bottom decorative band -->
+            <div class="flex gap-0 h-2">
+              <div class="flex-1 bg-pastel-peach"></div>
+              <div class="flex-1 bg-pastel-sage"></div>
+              <div class="flex-1 bg-pastel-lavender"></div>
+              <div class="flex-1 bg-pastel-sky"></div>
+              <div class="flex-1 bg-pastel-honey"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== DASHBOARD ===== -->
+        <div class="phone-content screen" id="screen-dashboard">
+          <div class="bg-cream-50 min-h-full pb-28">
+            <!-- Greeting — serif + informal -->
+            <div class="px-6 pt-4 pb-2">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-[13px] text-ink-50 font-medium">Saturday, 5 April</p>
+                  <h1 class="font-display text-[24px] font-semibold text-ink-400 leading-tight mt-0.5">Hi, Rajesh</h1>
+                </div>
+                <div class="w-11 h-11 rounded-full bg-pastel-peach flex items-center justify-center">
+                  <span class="font-display font-semibold text-soft-peach text-base">R</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stats — pastel colored cards, no borders no shadows -->
+            <div class="px-5 pt-3">
+              <div class="grid grid-cols-2 gap-2.5">
+                <div class="bg-pastel-lavender rounded-[20px] p-4 card-press cursor-pointer">
+                  <p class="text-[28px] font-display font-bold text-soft-lavender leading-none">47</p>
+                  <p class="text-[12px] text-soft-lavender/70 font-medium mt-1.5">Total leads</p>
+                  <p class="text-[11px] text-soft-lavender/50 mt-0.5">+5 this week</p>
+                </div>
+                <div class="bg-pastel-sage rounded-[20px] p-4 card-press cursor-pointer">
+                  <p class="text-[28px] font-display font-bold text-soft-sage leading-none">12</p>
+                  <p class="text-[12px] text-soft-sage/70 font-medium mt-1.5">Active chats</p>
+                  <p class="text-[11px] text-soft-sage/50 mt-0.5">3 unread</p>
+                </div>
+                <div class="bg-pastel-peach rounded-[20px] p-4 card-press cursor-pointer">
+                  <p class="text-[28px] font-display font-bold text-soft-peach leading-none">23</p>
+                  <p class="text-[12px] text-soft-peach/70 font-medium mt-1.5">Cars in stock</p>
+                  <p class="text-[11px] text-soft-peach/50 mt-0.5">2 sold today</p>
+                </div>
+                <div class="bg-pastel-sky rounded-[20px] p-4 card-press cursor-pointer">
+                  <p class="text-[28px] font-display font-bold text-soft-sky leading-none">5</p>
+                  <p class="text-[12px] text-soft-sky/70 font-medium mt-1.5">Appointments</p>
+                  <p class="text-[11px] text-soft-sky/50 mt-0.5">Next in 1 hr</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Actions — horizontal scroll, organic shapes -->
+            <div class="px-5 pt-6">
+              <p class="text-[11px] font-semibold text-ink-50 uppercase tracking-[0.08em] mb-2.5">Quick actions</p>
+              <div class="flex gap-2 overflow-x-auto pb-1" style="-webkit-overflow-scrolling:touch">
+                <button class="flex-shrink-0 h-11 px-5 bg-ink-300 text-cream-50 rounded-full text-[13px] font-semibold flex items-center gap-2 card-press">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                  New Lead
+                </button>
+                <button class="flex-shrink-0 h-11 px-5 bg-pastel-honey text-ink-200 rounded-full text-[13px] font-semibold flex items-center gap-2 card-press">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 1 1 0-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783" /></svg>
+                  Broadcast
+                </button>
+                <button class="flex-shrink-0 h-11 px-5 bg-pastel-mint text-ink-200 rounded-full text-[13px] font-semibold flex items-center gap-2 card-press">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                  Add Car
+                </button>
+              </div>
+            </div>
+
+            <!-- Activity — timeline style -->
+            <div class="px-5 pt-6">
+              <p class="text-[11px] font-semibold text-ink-50 uppercase tracking-[0.08em] mb-3">Today</p>
+              <div class="space-y-1">
+                <div class="flex items-start gap-3 p-3 rounded-2xl hover:bg-cream-100 transition-colors cursor-pointer card-press">
+                  <div class="w-10 h-10 rounded-full bg-pastel-sage flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span class="font-display font-semibold text-soft-sage text-sm">S</span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-[13px] font-semibold text-ink-300">New lead from WhatsApp</p>
+                    <p class="text-[12px] text-ink-50 mt-0.5">Suresh Kumar &mdash; Maruti Swift</p>
+                  </div>
+                  <span class="text-[11px] text-ink-50 flex-shrink-0 mt-1">2m</span>
+                </div>
+                <div class="flex items-start gap-3 p-3 rounded-2xl hover:bg-cream-100 transition-colors cursor-pointer card-press">
+                  <div class="w-10 h-10 rounded-full bg-pastel-lilac flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg class="w-4.5 h-4.5 text-soft-lavender" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" /></svg>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-[13px] font-semibold text-ink-300">AI replied to Priya</p>
+                    <p class="text-[12px] text-ink-50 mt-0.5">Sent Hyundai i20 photos</p>
+                  </div>
+                  <span class="text-[11px] text-ink-50 flex-shrink-0 mt-1">15m</span>
+                </div>
+                <div class="flex items-start gap-3 p-3 rounded-2xl hover:bg-cream-100 transition-colors cursor-pointer card-press">
+                  <div class="w-10 h-10 rounded-full bg-pastel-sky flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg class="w-4.5 h-4.5 text-soft-sky" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" /></svg>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-[13px] font-semibold text-ink-300">Appointment booked</p>
+                    <p class="text-[12px] text-ink-50 mt-0.5">Amit Patel &mdash; Tomorrow 3 PM</p>
+                  </div>
+                  <span class="text-[11px] text-ink-50 flex-shrink-0 mt-1">1h</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Floating dark pill nav -->
+          <div class="absolute bottom-5 left-4 right-4">
+            <div class="nav-pill rounded-full px-3 py-2.5 flex items-center justify-around">
+              <button class="flex flex-col items-center gap-0.5 py-1 min-w-[52px]">
+                <div class="w-8 h-8 rounded-full bg-cream-50/15 flex items-center justify-center">
+                  <svg class="w-[18px] h-[18px] text-cream-50" fill="currentColor" viewBox="0 0 24 24"><path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" /><path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" /></svg>
+                </div>
+                <span class="text-[9px] font-semibold text-cream-50">Home</span>
+              </button>
+              <button class="flex flex-col items-center gap-0.5 py-1 min-w-[52px] relative">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center">
+                  <svg class="w-[18px] h-[18px] text-cream-50/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" /></svg>
+                </div>
+                <div class="absolute top-0.5 right-2.5 w-[14px] h-[14px] bg-pastel-peach rounded-full flex items-center justify-center">
+                  <span class="text-[8px] text-soft-peach font-bold">3</span>
+                </div>
+                <span class="text-[9px] font-medium text-cream-50/50">Chats</span>
+              </button>
+              <button class="flex flex-col items-center gap-0.5 py-1 min-w-[52px]">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center">
+                  <svg class="w-[18px] h-[18px] text-cream-50/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" /></svg>
+                </div>
+                <span class="text-[9px] font-medium text-cream-50/50">Leads</span>
+              </button>
+              <button class="flex flex-col items-center gap-0.5 py-1 min-w-[52px]">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center">
+                  <svg class="w-[18px] h-[18px] text-cream-50/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" /></svg>
+                </div>
+                <span class="text-[9px] font-medium text-cream-50/50">AI</span>
+              </button>
+              <button class="flex flex-col items-center gap-0.5 py-1 min-w-[52px]">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center">
+                  <svg class="w-[18px] h-[18px] text-cream-50/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
+                </div>
+                <span class="text-[9px] font-medium text-cream-50/50">More</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== CONVERSATIONS ===== -->
+        <div class="phone-content screen" id="screen-conversations">
+          <div class="bg-cream-50 min-h-full pb-28">
+            <div class="px-6 pt-4 pb-3">
+              <h1 class="font-display text-[24px] font-bold text-ink-400">Chats</h1>
+              <div class="mt-3">
+                <input type="text" placeholder="Search conversations..." class="w-full h-11 px-4 text-[14px] text-ink-300 bg-cream-200/60 rounded-2xl focus:outline-none focus:ring-2 focus:ring-ink-100/20 placeholder:text-ink-50/70 transition-all" />
+              </div>
+            </div>
+
+            <!-- Unread indicator -->
+            <div class="px-6 pb-2">
+              <div class="flex items-center gap-2">
+                <div class="w-1.5 h-1.5 rounded-full bg-soft-peach"></div>
+                <span class="text-[11px] font-semibold text-ink-50 uppercase tracking-[0.08em]">3 unread</span>
+              </div>
+            </div>
+
+            <div class="px-3">
+              <!-- Chat 1 — unread -->
+              <div class="flex items-center gap-3 px-3 py-3 rounded-2xl bg-pastel-peach/30 mb-1 cursor-pointer card-press">
+                <div class="w-[48px] h-[48px] rounded-full bg-pastel-sage flex items-center justify-center flex-shrink-0">
+                  <span class="font-display font-semibold text-soft-sage text-lg">S</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between">
+                    <p class="text-[14px] font-semibold text-ink-300">Suresh Kumar</p>
+                    <span class="text-[11px] text-soft-peach font-semibold">2:30</span>
+                  </div>
+                  <p class="text-[12px] text-ink-100 truncate mt-0.5">Bhai Swift ka price kya hai? 2021 wali</p>
+                </div>
+                <div class="w-5 h-5 bg-soft-peach rounded-full flex items-center justify-center flex-shrink-0">
+                  <span class="text-[9px] text-cream-50 font-bold">2</span>
+                </div>
+              </div>
+
+              <!-- Chat 2 — unread -->
+              <div class="flex items-center gap-3 px-3 py-3 rounded-2xl bg-pastel-peach/15 mb-1 cursor-pointer card-press">
+                <div class="w-[48px] h-[48px] rounded-full bg-pastel-rose flex items-center justify-center flex-shrink-0">
+                  <span class="font-display font-semibold text-soft-rose text-lg">P</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between">
+                    <p class="text-[14px] font-semibold text-ink-300">Priya Sharma</p>
+                    <span class="text-[11px] text-soft-peach font-semibold">1:45</span>
+                  </div>
+                  <p class="text-[12px] text-ink-100 truncate mt-0.5">i20 ki photos bhej sakte ho?</p>
+                </div>
+                <div class="w-5 h-5 bg-soft-peach rounded-full flex items-center justify-center flex-shrink-0">
+                  <span class="text-[9px] text-cream-50 font-bold">1</span>
+                </div>
+              </div>
+
+              <!-- Divider -->
+              <div class="h-px bg-cream-200 mx-3 my-2"></div>
+
+              <!-- Chat 3 -->
+              <div class="flex items-center gap-3 px-3 py-3 rounded-2xl hover:bg-cream-100 mb-0.5 cursor-pointer card-press">
+                <div class="w-[48px] h-[48px] rounded-full bg-pastel-honey flex items-center justify-center flex-shrink-0">
+                  <span class="font-display font-semibold text-soft-honey text-lg">A</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between">
+                    <p class="text-[14px] font-medium text-ink-200">Amit Patel</p>
+                    <span class="text-[11px] text-ink-50">12:10</span>
+                  </div>
+                  <p class="text-[12px] text-ink-50 truncate mt-0.5">Ok bhai, kal 3 baje aa jaunga dekhne</p>
+                </div>
+              </div>
+
+              <!-- Chat 4 -->
+              <div class="flex items-center gap-3 px-3 py-3 rounded-2xl hover:bg-cream-100 mb-0.5 cursor-pointer card-press">
+                <div class="w-[48px] h-[48px] rounded-full bg-pastel-sky flex items-center justify-center flex-shrink-0">
+                  <span class="font-display font-semibold text-soft-sky text-lg">R</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between">
+                    <p class="text-[14px] font-medium text-ink-200">Ramesh Verma</p>
+                    <span class="text-[11px] text-ink-50">11:30</span>
+                  </div>
+                  <p class="text-[12px] text-ink-50 truncate mt-0.5">Ertiga diesel available hai?</p>
+                </div>
+              </div>
+
+              <!-- Chat 5 -->
+              <div class="flex items-center gap-3 px-3 py-3 rounded-2xl hover:bg-cream-100 mb-0.5 cursor-pointer card-press">
+                <div class="w-[48px] h-[48px] rounded-full bg-pastel-lavender flex items-center justify-center flex-shrink-0">
+                  <span class="font-display font-semibold text-soft-lavender text-lg">M</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between">
+                    <p class="text-[14px] font-medium text-ink-200">Manoj Gupta</p>
+                    <span class="text-[11px] text-ink-50">Yesterday</span>
+                  </div>
+                  <p class="text-[12px] text-ink-50 truncate mt-0.5">Finance ka kya option hai?</p>
+                </div>
+              </div>
+
+              <!-- Chat 6 -->
+              <div class="flex items-center gap-3 px-3 py-3 rounded-2xl hover:bg-cream-100 mb-0.5 cursor-pointer card-press">
+                <div class="w-[48px] h-[48px] rounded-full bg-pastel-mint flex items-center justify-center flex-shrink-0">
+                  <span class="font-display font-semibold text-soft-mint text-lg">D</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between">
+                    <p class="text-[14px] font-medium text-ink-200">Deepak Joshi</p>
+                    <span class="text-[11px] text-ink-50">Yesterday</span>
+                  </div>
+                  <p class="text-[12px] text-ink-50 truncate mt-0.5">Wagon R 2020 ka mileage kitna?</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Nav -->
+          <div class="absolute bottom-5 left-4 right-4">
+            <div class="nav-pill rounded-full px-3 py-2.5 flex items-center justify-around">
+              <button class="flex flex-col items-center gap-0.5 py-1 min-w-[52px]"><div class="w-8 h-8 rounded-full flex items-center justify-center"><svg class="w-[18px] h-[18px] text-cream-50/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg></div><span class="text-[9px] font-medium text-cream-50/50">Home</span></button>
+              <button class="flex flex-col items-center gap-0.5 py-1 min-w-[52px]"><div class="w-8 h-8 rounded-full bg-cream-50/15 flex items-center justify-center"><svg class="w-[18px] h-[18px] text-cream-50" fill="currentColor" viewBox="0 0 24 24"><path d="M4.913 2.658c2.075-.27 4.19-.408 6.337-.408 2.147 0 4.262.139 6.337.408 1.922.25 3.291 1.861 3.405 3.727a4.403 4.403 0 0 0-1.032-.211 50.89 50.89 0 0 0-8.42 0c-2.358.196-4.04 2.19-4.04 4.434v4.286a4.47 4.47 0 0 0 2.433 3.984L7.28 21.53A.75.75 0 0 1 6 20.97v-3.727a43.14 43.14 0 0 1-1.087-.063C2.99 17.033 1.5 15.3 1.5 13.225V6.385c0-2.076 1.49-3.808 3.413-3.727ZM15.75 7.5c-1.376 0-2.739.057-4.086.169C10.124 7.797 9 9.103 9 10.609v4.285c0 1.507 1.128 2.814 2.67 2.94 1.243.102 2.5.157 3.768.165l2.782 2.781a.75.75 0 0 0 1.28-.53v-2.39l.33-.026c1.542-.125 2.67-1.433 2.67-2.94v-4.286c0-1.505-1.125-2.811-2.664-2.94A49.392 49.392 0 0 0 15.75 7.5Z" /></svg></div><span class="text-[9px] font-semibold text-cream-50">Chats</span></button>
+              <button class="flex flex-col items-center gap-0.5 py-1 min-w-[52px]"><div class="w-8 h-8 rounded-full flex items-center justify-center"><svg class="w-[18px] h-[18px] text-cream-50/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" /></svg></div><span class="text-[9px] font-medium text-cream-50/50">Leads</span></button>
+              <button class="flex flex-col items-center gap-0.5 py-1 min-w-[52px]"><div class="w-8 h-8 rounded-full flex items-center justify-center"><svg class="w-[18px] h-[18px] text-cream-50/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" /></svg></div><span class="text-[9px] font-medium text-cream-50/50">AI</span></button>
+              <button class="flex flex-col items-center gap-0.5 py-1 min-w-[52px]"><div class="w-8 h-8 rounded-full flex items-center justify-center"><svg class="w-[18px] h-[18px] text-cream-50/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg></div><span class="text-[9px] font-medium text-cream-50/50">More</span></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== LEADS ===== -->
+        <div class="phone-content screen" id="screen-leads">
+          <div class="bg-cream-50 min-h-full pb-28">
+            <div class="px-6 pt-4 pb-2">
+              <div class="flex items-center justify-between">
+                <h1 class="font-display text-[24px] font-bold text-ink-400">Leads</h1>
+                <button class="h-10 px-4 bg-ink-300 text-cream-50 text-[13px] font-semibold rounded-full flex items-center gap-1.5 card-press">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                  Add
+                </button>
+              </div>
+              <!-- Filters — pastel pills -->
+              <div class="flex gap-2 mt-3">
+                <button class="h-8 px-4 bg-ink-300 text-cream-50 text-[12px] font-semibold rounded-full">All</button>
+                <button class="h-8 px-4 bg-pastel-rose text-soft-rose text-[12px] font-semibold rounded-full">Hot</button>
+                <button class="h-8 px-4 bg-pastel-honey text-soft-honey text-[12px] font-semibold rounded-full">Warm</button>
+                <button class="h-8 px-4 bg-cream-200 text-ink-50 text-[12px] font-semibold rounded-full">Cold</button>
+              </div>
+            </div>
+
+            <div class="px-4 pt-3 space-y-2">
+              <!-- Lead card — pastel left accent -->
+              <div class="bg-cream-100/80 rounded-[20px] p-4 cursor-pointer card-press flex gap-3">
+                <div class="w-1 rounded-full bg-soft-rose flex-shrink-0"></div>
+                <div class="flex-1">
+                  <div class="flex items-start justify-between">
+                    <div class="flex items-center gap-3">
+                      <div class="w-11 h-11 rounded-full bg-pastel-sage flex items-center justify-center flex-shrink-0">
+                        <span class="font-display font-bold text-soft-sage">S</span>
+                      </div>
+                      <div>
+                        <p class="text-[14px] font-semibold text-ink-300">Suresh Kumar</p>
+                        <p class="text-[11px] text-ink-50">+91 98765 43210</p>
+                      </div>
+                    </div>
+                    <span class="px-2.5 py-1 bg-pastel-rose text-soft-rose text-[10px] font-bold rounded-full">Hot</span>
+                  </div>
+                  <div class="mt-2.5 flex items-center gap-2">
+                    <span class="text-[12px] text-ink-100 font-medium">Maruti Swift 2021</span>
+                    <span class="text-ink-50/40">&middot;</span>
+                    <span class="text-[11px] text-ink-50">Today</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-cream-100/80 rounded-[20px] p-4 cursor-pointer card-press flex gap-3">
+                <div class="w-1 rounded-full bg-soft-rose flex-shrink-0"></div>
+                <div class="flex-1">
+                  <div class="flex items-start justify-between">
+                    <div class="flex items-center gap-3">
+                      <div class="w-11 h-11 rounded-full bg-pastel-rose flex items-center justify-center flex-shrink-0">
+                        <span class="font-display font-bold text-soft-rose">P</span>
+                      </div>
+                      <div>
+                        <p class="text-[14px] font-semibold text-ink-300">Priya Sharma</p>
+                        <p class="text-[11px] text-ink-50">+91 87654 32109</p>
+                      </div>
+                    </div>
+                    <span class="px-2.5 py-1 bg-pastel-rose text-soft-rose text-[10px] font-bold rounded-full">Hot</span>
+                  </div>
+                  <div class="mt-2.5 flex items-center gap-2">
+                    <span class="text-[12px] text-ink-100 font-medium">Hyundai i20 2022</span>
+                    <span class="text-ink-50/40">&middot;</span>
+                    <span class="text-[11px] text-ink-50">Today</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-cream-100/80 rounded-[20px] p-4 cursor-pointer card-press flex gap-3">
+                <div class="w-1 rounded-full bg-soft-honey flex-shrink-0"></div>
+                <div class="flex-1">
+                  <div class="flex items-start justify-between">
+                    <div class="flex items-center gap-3">
+                      <div class="w-11 h-11 rounded-full bg-pastel-honey flex items-center justify-center flex-shrink-0">
+                        <span class="font-display font-bold text-soft-honey">A</span>
+                      </div>
+                      <div>
+                        <p class="text-[14px] font-semibold text-ink-300">Amit Patel</p>
+                        <p class="text-[11px] text-ink-50">+91 76543 21098</p>
+                      </div>
+                    </div>
+                    <span class="px-2.5 py-1 bg-pastel-honey text-soft-honey text-[10px] font-bold rounded-full">Warm</span>
+                  </div>
+                  <div class="mt-2.5 flex items-center gap-2">
+                    <span class="text-[12px] text-ink-100 font-medium">Honda City 2020</span>
+                    <span class="text-ink-50/40">&middot;</span>
+                    <span class="text-[11px] text-ink-50">Yesterday</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-cream-100/80 rounded-[20px] p-4 cursor-pointer card-press flex gap-3">
+                <div class="w-1 rounded-full bg-ink-50/30 flex-shrink-0"></div>
+                <div class="flex-1">
+                  <div class="flex items-start justify-between">
+                    <div class="flex items-center gap-3">
+                      <div class="w-11 h-11 rounded-full bg-cream-200 flex items-center justify-center flex-shrink-0">
+                        <span class="font-display font-bold text-ink-50">M</span>
+                      </div>
+                      <div>
+                        <p class="text-[14px] font-semibold text-ink-300">Manoj Gupta</p>
+                        <p class="text-[11px] text-ink-50">+91 54321 09876</p>
+                      </div>
+                    </div>
+                    <span class="px-2.5 py-1 bg-cream-200 text-ink-50 text-[10px] font-bold rounded-full">Cold</span>
+                  </div>
+                  <div class="mt-2.5 flex items-center gap-2">
+                    <span class="text-[12px] text-ink-100 font-medium">Wagon R 2020</span>
+                    <span class="text-ink-50/40">&middot;</span>
+                    <span class="text-[11px] text-ink-50">5 days ago</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Nav -->
+          <div class="absolute bottom-5 left-4 right-4">
+            <div class="nav-pill rounded-full px-3 py-2.5 flex items-center justify-around">
+              <button class="flex flex-col items-center gap-0.5 py-1 min-w-[52px]"><div class="w-8 h-8 rounded-full flex items-center justify-center"><svg class="w-[18px] h-[18px] text-cream-50/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg></div><span class="text-[9px] font-medium text-cream-50/50">Home</span></button>
+              <button class="flex flex-col items-center gap-0.5 py-1 min-w-[52px]"><div class="w-8 h-8 rounded-full flex items-center justify-center"><svg class="w-[18px] h-[18px] text-cream-50/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" /></svg></div><span class="text-[9px] font-medium text-cream-50/50">Chats</span></button>
+              <button class="flex flex-col items-center gap-0.5 py-1 min-w-[52px]"><div class="w-8 h-8 rounded-full bg-cream-50/15 flex items-center justify-center"><svg class="w-[18px] h-[18px] text-cream-50" fill="currentColor" viewBox="0 0 24 24"><path d="M4.5 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM14.25 8.625a3.375 3.375 0 1 1 6.75 0 3.375 3.375 0 0 1-6.75 0ZM1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122Z" /></svg></div><span class="text-[9px] font-semibold text-cream-50">Leads</span></button>
+              <button class="flex flex-col items-center gap-0.5 py-1 min-w-[52px]"><div class="w-8 h-8 rounded-full flex items-center justify-center"><svg class="w-[18px] h-[18px] text-cream-50/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" /></svg></div><span class="text-[9px] font-medium text-cream-50/50">AI</span></button>
+              <button class="flex flex-col items-center gap-0.5 py-1 min-w-[52px]"><div class="w-8 h-8 rounded-full flex items-center justify-center"><svg class="w-[18px] h-[18px] text-cream-50/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg></div><span class="text-[9px] font-medium text-cream-50/50">More</span></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== AI BRAIN ===== -->
+        <div class="phone-content screen" id="screen-ai-brain">
+          <div class="bg-cream-50 min-h-full pb-28">
+            <div class="px-6 pt-4 pb-2">
+              <h1 class="font-display text-[24px] font-bold text-ink-400">AI Brain</h1>
+              <p class="text-[13px] text-ink-50 mt-0.5">Your assistant learns from you.</p>
+            </div>
+
+            <!-- Status — full-width pastel card -->
+            <div class="px-5 pt-3">
+              <div class="bg-pastel-lilac rounded-[24px] p-5 relative overflow-hidden">
+                <div class="absolute -top-8 -right-8 w-32 h-32 bg-white/10 rounded-full"></div>
+                <div class="flex items-center gap-3 relative z-10">
+                  <div class="w-12 h-12 rounded-full bg-white/30 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-soft-lavender" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 0 0-2.455 2.456Z" /></svg>
+                  </div>
+                  <div>
+                    <p class="font-display text-lg font-bold text-soft-lavender">Active & learning</p>
+                    <p class="text-[12px] text-soft-lavender/60">124 chats handled this week</p>
+                  </div>
+                </div>
+                <div class="flex gap-2 mt-4 relative z-10">
+                  <div class="flex-1 bg-white/25 rounded-2xl p-3 text-center">
+                    <p class="text-lg font-display font-bold text-soft-lavender">92%</p>
+                    <p class="text-[9px] text-soft-lavender/50 font-medium">Accuracy</p>
+                  </div>
+                  <div class="flex-1 bg-white/25 rounded-2xl p-3 text-center">
+                    <p class="text-lg font-display font-bold text-soft-lavender">&lt;30s</p>
+                    <p class="text-[9px] text-soft-lavender/50 font-medium">Reply time</p>
+                  </div>
+                  <div class="flex-1 bg-white/25 rounded-2xl p-3 text-center">
+                    <p class="text-lg font-display font-bold text-soft-lavender">4.8</p>
+                    <p class="text-[9px] text-soft-lavender/50 font-medium">Quality</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="px-5 pt-5">
+              <div class="flex gap-1 bg-cream-200/60 rounded-full p-1">
+                <button class="flex-1 h-9 bg-cream-50 rounded-full text-[12px] font-semibold text-ink-300 shadow-sm">Knowledge</button>
+                <button class="flex-1 h-9 rounded-full text-[12px] font-medium text-ink-50">Personality</button>
+                <button class="flex-1 h-9 rounded-full text-[12px] font-medium text-ink-50">Rules</button>
+              </div>
+            </div>
+
+            <!-- Knowledge items -->
+            <div class="px-5 pt-4 space-y-2">
+              <div class="bg-cream-100/80 rounded-[18px] p-4 flex items-center justify-between card-press cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-full bg-pastel-peach flex items-center justify-center">
+                    <svg class="w-5 h-5 text-soft-peach" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0H6.75" /></svg>
+                  </div>
+                  <div>
+                    <p class="text-[13px] font-semibold text-ink-300">Car Inventory</p>
+                    <p class="text-[11px] text-ink-50">23 cars synced</p>
+                  </div>
+                </div>
+                <div class="w-2 h-2 rounded-full bg-soft-sage"></div>
+              </div>
+
+              <div class="bg-cream-100/80 rounded-[18px] p-4 flex items-center justify-between card-press cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-full bg-pastel-honey flex items-center justify-center">
+                    <svg class="w-5 h-5 text-soft-honey" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9" /></svg>
+                  </div>
+                  <div>
+                    <p class="text-[13px] font-semibold text-ink-300">Pricing & Finance</p>
+                    <p class="text-[11px] text-ink-50">EMI, down payment</p>
+                  </div>
+                </div>
+                <div class="w-2 h-2 rounded-full bg-soft-sage"></div>
+              </div>
+
+              <div class="bg-cream-100/80 rounded-[18px] p-4 flex items-center justify-between card-press cursor-pointer">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-full bg-pastel-sky flex items-center justify-center">
+                    <svg class="w-5 h-5 text-soft-sky" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" /></svg>
+                  </div>
+                  <div>
+                    <p class="text-[13px] font-semibold text-ink-300">Showroom Details</p>
+                    <p class="text-[11px] text-ink-50">Address, hours</p>
+                  </div>
+                </div>
+                <div class="w-2 h-2 rounded-full bg-soft-sage"></div>
+              </div>
+
+              <button class="w-full h-14 border-2 border-dashed border-cream-200 rounded-[18px] text-[13px] font-semibold text-ink-50 flex items-center justify-center gap-2 hover:border-ink-50 hover:text-ink-100 transition-all card-press">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                Add knowledge source
+              </button>
+            </div>
+          </div>
+
+          <!-- Nav -->
+          <div class="absolute bottom-5 left-4 right-4">
+            <div class="nav-pill rounded-full px-3 py-2.5 flex items-center justify-around">
+              <button class="flex flex-col items-center gap-0.5 py-1 min-w-[52px]"><div class="w-8 h-8 rounded-full flex items-center justify-center"><svg class="w-[18px] h-[18px] text-cream-50/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg></div><span class="text-[9px] font-medium text-cream-50/50">Home</span></button>
+              <button class="flex flex-col items-center gap-0.5 py-1 min-w-[52px]"><div class="w-8 h-8 rounded-full flex items-center justify-center"><svg class="w-[18px] h-[18px] text-cream-50/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25" /></svg></div><span class="text-[9px] font-medium text-cream-50/50">Chats</span></button>
+              <button class="flex flex-col items-center gap-0.5 py-1 min-w-[52px]"><div class="w-8 h-8 rounded-full flex items-center justify-center"><svg class="w-[18px] h-[18px] text-cream-50/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493" /></svg></div><span class="text-[9px] font-medium text-cream-50/50">Leads</span></button>
+              <button class="flex flex-col items-center gap-0.5 py-1 min-w-[52px]"><div class="w-8 h-8 rounded-full bg-cream-50/15 flex items-center justify-center"><svg class="w-[18px] h-[18px] text-cream-50" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M9 4.5a.75.75 0 0 1 .721.544l.813 2.846a3.75 3.75 0 0 0 2.576 2.576l2.846.813a.75.75 0 0 1 0 1.442l-2.846.813a3.75 3.75 0 0 0-2.576 2.576l-.813 2.846a.75.75 0 0 1-1.442 0l-.813-2.846a3.75 3.75 0 0 0-2.576-2.576l-2.846-.813a.75.75 0 0 1 0-1.442l2.846-.813A3.75 3.75 0 0 0 8.466 7.89l.813-2.846A.75.75 0 0 1 9 4.5ZM18 1.5a.75.75 0 0 1 .728.568l.258 1.036c.236.94.97 1.674 1.91 1.91l1.036.258a.75.75 0 0 1 0 1.456l-1.036.258c-.94.236-1.674.97-1.91 1.91l-.258 1.036a.75.75 0 0 1-1.456 0l-.258-1.036a2.625 2.625 0 0 0-1.91-1.91l-1.036-.258a.75.75 0 0 1 0-1.456l1.036-.258a2.625 2.625 0 0 0 1.91-1.91l.258-1.036A.75.75 0 0 1 18 1.5Z" clip-rule="evenodd" /></svg></div><span class="text-[9px] font-semibold text-cream-50">AI</span></button>
+              <button class="flex flex-col items-center gap-0.5 py-1 min-w-[52px]"><div class="w-8 h-8 rounded-full flex items-center justify-center"><svg class="w-[18px] h-[18px] text-cream-50/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg></div><span class="text-[9px] font-medium text-cream-50/50">More</span></button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Design Notes -->
+    <div class="flex-1 min-w-0">
+      <div class="bg-cream-50 rounded-[28px] border border-cream-200 p-6">
+        <h2 class="font-display text-lg font-bold text-ink-400 mb-5">Design System v3</h2>
+
+        <div class="mb-6">
+          <p class="text-[11px] font-semibold text-ink-50 uppercase tracking-[0.08em] mb-3">Palette</p>
+          <div class="flex gap-3 flex-wrap">
+            <div class="text-center"><div class="w-14 h-14 rounded-full bg-pastel-lavender"></div><p class="text-[10px] text-ink-50 mt-1.5">Lavender</p></div>
+            <div class="text-center"><div class="w-14 h-14 rounded-full bg-pastel-sage"></div><p class="text-[10px] text-ink-50 mt-1.5">Sage</p></div>
+            <div class="text-center"><div class="w-14 h-14 rounded-full bg-pastel-peach"></div><p class="text-[10px] text-ink-50 mt-1.5">Peach</p></div>
+            <div class="text-center"><div class="w-14 h-14 rounded-full bg-pastel-sky"></div><p class="text-[10px] text-ink-50 mt-1.5">Sky</p></div>
+            <div class="text-center"><div class="w-14 h-14 rounded-full bg-pastel-honey"></div><p class="text-[10px] text-ink-50 mt-1.5">Honey</p></div>
+            <div class="text-center"><div class="w-14 h-14 rounded-full bg-pastel-rose"></div><p class="text-[10px] text-ink-50 mt-1.5">Rose</p></div>
+            <div class="text-center"><div class="w-14 h-14 rounded-full bg-pastel-mint"></div><p class="text-[10px] text-ink-50 mt-1.5">Mint</p></div>
+          </div>
+          <div class="flex gap-3 mt-3">
+            <div class="text-center"><div class="w-14 h-14 rounded-full bg-cream-50 border border-cream-200"></div><p class="text-[10px] text-ink-50 mt-1.5">Cream</p></div>
+            <div class="text-center"><div class="w-14 h-14 rounded-full bg-ink-300"></div><p class="text-[10px] text-ink-50 mt-1.5">Ink</p></div>
+            <div class="text-center"><div class="w-14 h-14 rounded-full bg-ink-50"></div><p class="text-[10px] text-ink-50 mt-1.5">Muted</p></div>
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <p class="text-[11px] font-semibold text-ink-50 uppercase tracking-[0.08em] mb-3">What makes it unique</p>
+          <div class="space-y-3 text-sm text-ink-200">
+            <div class="bg-pastel-lavender/30 rounded-2xl p-3.5">
+              <p class="font-semibold text-ink-300">Satoshi + Instrument Sans</p>
+              <p class="text-[12px] text-ink-100 mt-0.5">Satoshi for headings &mdash; geometric, clean, bold. Instrument Sans for body &mdash; crisp and legible. A modern pairing that feels confident without being loud.</p>
+            </div>
+            <div class="bg-pastel-sage/30 rounded-2xl p-3.5">
+              <p class="font-semibold text-ink-300">Warm cream base, not cold white</p>
+              <p class="text-[12px] text-ink-100 mt-0.5">#FEFCF8 base with paper-like grain texture. Feels handcrafted and approachable, not clinical.</p>
+            </div>
+            <div class="bg-pastel-peach/30 rounded-2xl p-3.5">
+              <p class="font-semibold text-ink-300">Floating dark pill nav</p>
+              <p class="text-[12px] text-ink-100 mt-0.5">Dark floating capsule instead of flat white bar. Feels premium, saves space, looks like nothing else.</p>
+            </div>
+            <div class="bg-pastel-honey/30 rounded-2xl p-3.5">
+              <p class="font-semibold text-ink-300">Color-coded everything</p>
+              <p class="text-[12px] text-ink-100 mt-0.5">Each stat card is a full pastel color, not white-with-icon. Each person gets their own pastel avatar. Status = color.</p>
+            </div>
+            <div class="bg-pastel-sky/30 rounded-2xl p-3.5">
+              <p class="font-semibold text-ink-300">No borders, no shadows</p>
+              <p class="text-[12px] text-ink-100 mt-0.5">Cards separated by color alone. Cleaner, calmer. Lead cards use a thin left accent bar for status.</p>
+            </div>
+            <div class="bg-pastel-rose/30 rounded-2xl p-3.5">
+              <p class="font-semibold text-ink-300">Subtle grain texture</p>
+              <p class="text-[12px] text-ink-100 mt-0.5">SVG noise overlay gives a paper-like organic feel. Very subtle. Makes it feel less digital, more human.</p>
+            </div>
+            <div class="bg-pastel-mint/30 rounded-2xl p-3.5">
+              <p class="font-semibold text-ink-300">Tiny green dots, not "Live" badges</p>
+              <p class="text-[12px] text-ink-100 mt-0.5">AI Brain knowledge items use a minimal green dot instead of a badge. Less noise, same information.</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-[11px] font-semibold text-ink-50 uppercase tracking-[0.08em] mb-3">Components</p>
+          <div class="space-y-3">
+            <div class="flex gap-2 flex-wrap">
+              <button class="h-11 px-5 bg-ink-300 text-cream-50 font-semibold rounded-full text-sm">Primary</button>
+              <button class="h-11 px-5 bg-pastel-honey text-ink-200 font-semibold rounded-full text-sm">Soft</button>
+              <button class="h-11 px-5 bg-cream-200 text-ink-100 font-semibold rounded-full text-sm">Ghost</button>
+            </div>
+            <div class="flex gap-2 flex-wrap">
+              <span class="px-3 py-1 bg-pastel-rose text-soft-rose text-[11px] font-bold rounded-full">Hot</span>
+              <span class="px-3 py-1 bg-pastel-honey text-soft-honey text-[11px] font-bold rounded-full">Warm</span>
+              <span class="px-3 py-1 bg-cream-200 text-ink-50 text-[11px] font-bold rounded-full">Cold</span>
+            </div>
+            <input type="text" placeholder="Pastel input" class="w-full h-[52px] px-5 text-[14px] text-ink-300 bg-pastel-honey/40 rounded-2xl border-none focus:outline-none focus:ring-2 focus:ring-ink-200/20 placeholder:text-ink-50/60" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showScreen(name) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.screen-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('screen-' + name).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>
